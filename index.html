@@ -137,17 +137,27 @@ while True:
     
 The following python code outputs random cards:
 <pre><code># import random to get randomness
-from random import randint
+from random import shuffle
 
-# read n, k, w and j
-n, k, w, j = map(int, input().split())
+# read n and j
+n, j = map(int, input().split())
 
-# repeating for the whole game
-while True:
-    # outputting random integer
-    print(randint(1, n))
-    # reading the input but ignoring it
-    submitted_numbers = list(map(int, input().split()))</code></pre>
+# Make a list of all cards 1,2,3,4,....,13,14,15
+cards = list(range(1,16))
+
+# shuffling the cards
+shuffle(cards)
+
+# laying out these cards in this order
+for card in cards:
+    # reading winnable card in the middle (and ignoring it)
+    w = int(input())
+
+    # play this card
+    print(card)
+
+    # reading the cards the other players played (and ignoring it)
+    playedCards = list(map(int, input().split()))</code></pre>
 <h3>C++</h3>
 The following C++ code always outputs the highest possible number ($k$):
 <pre><code>#include&le;iostream>
