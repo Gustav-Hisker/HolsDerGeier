@@ -345,13 +345,13 @@ def randomGameDisplay():
         return f.read()
 
 
-@app.get("/chalkFont.ttf")
+@app.get("/background.jpeq")
 def loadgif():
     def iterfile():
-        with open("./chalk-font.ttf", mode="rb") as file_like:
+        with open("./background.jpeg", mode="rb") as file_like:
             yield from file_like
 
-    return StreamingResponse(iterfile(), media_type="ttf")
+    return StreamingResponse(iterfile(), media_type="jpeg")
 
 
 @app.get("/randomGame", response_class=JSONResponse)
