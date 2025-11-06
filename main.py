@@ -81,7 +81,7 @@ def game(paths: list[str]):
         except Exception as e:
             while programs:
                 del programs[0]
-            yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
+            yield [-100 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
             return
 
     scores = [0 for _ in programs]
@@ -99,7 +99,7 @@ def game(paths: list[str]):
             except Exception as e:
                 while programs:
                     del programs[0]
-                yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
+                yield [-100 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
                 return
 
         for i, p in enumerate(programs):
@@ -108,7 +108,7 @@ def game(paths: list[str]):
             except Exception as e:
                 while programs:
                     del programs[0]
-                yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
+                yield [-100 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
                 return
 
         if winnables:
@@ -118,7 +118,7 @@ def game(paths: list[str]):
                 except Exception as e:
                     while programs:
                         del programs[0]
-                    yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
+                    yield [-100 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
                     return
 
         submissionCounts = {s:0 for s in range(1,16)}
@@ -145,7 +145,7 @@ def game(paths: list[str]):
             else:
                 remainer = winnableSum
 
-        yield scores, submissions, winnableSum, None
+        yield scores.copy(), submissions.copy(), winnableSum, None
 
     while programs:
         del programs[0]
