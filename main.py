@@ -61,6 +61,7 @@ class ProgramHandler:
         except:
             pass
         if resInt in self.cards:
+            self.cards.remove(resInt)
             return resInt
         else:
             raise Exception(f"{result.strip()} is no valid output")
@@ -403,4 +404,4 @@ def tournament(n: int = 5):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000)
+    uvicorn.run("main:app", host="127.0.0.1", port=9000)
