@@ -345,7 +345,7 @@ def randomGameDisplay():
         return f.read()
 
 
-@app.get("/background.jpeq")
+@app.get("/background.jpeg")
 def loadgif():
     def iterfile():
         with open("./background.jpeg", mode="rb") as file_like:
@@ -355,7 +355,7 @@ def loadgif():
 
 
 @app.get("/randomGame", response_class=JSONResponse)
-def randomGame(n: int = 8):
+def randomGame(n: int = 5):
     programs = []
     for i in range(n):
         programs.append(random.choice(allPrograms()))
