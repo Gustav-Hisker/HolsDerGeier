@@ -1,8 +1,8 @@
 # import random to get randomness
 from random import shuffle
 
-# read n
-n = int(input())
+# read n and j
+n, j = map(int, input().split())
 
 # Make a list of all cards 1,2,3,4,....,13,14,15
 cards = list(range(1,16))
