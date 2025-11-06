@@ -34,10 +34,11 @@
     This card is then discarded, so you can't use it later on anymore. 
     </p>
     <p>
-    The person who wins the card gets its value added to his score. If the value of the auction card is positive, the 
-    person who submitted the highest unique number, i.e. the highest number no one else submitted. If its value is negative, the person who submitted the
+    The person who wins the card gets its value added to his score. If the value of the auction card is nonnegative, the 
+    person who submitted the highest unique number, i.e. the highest number no one else submitted, gets it. If its value is negative, the person who submitted the
     least unique number gets it. There is an exception if no one submitted a unique number. In this case, the card 
-    stays in the middle and in the next round, the players compete for both cards together, so the sum of their values. (This continues if necessary.)
+    stays in the middle and in the next round, the players compete for both cards together, and the game works as if they
+    were one auction card with the value of their sum. (This continues if necessary.)
     </p>
     <p>
     The game ends after $15$ turns, when all the players have no more cards left. Then, each player receives his score for this game.
@@ -69,7 +70,7 @@
     so watch out for this. The input simply looks like this:
     <br> <code> s </code> <br>
     Then, your program has to decide the first number to submit. Note that your strategy depends on the sign of $s$.
-    If your output is not an integer between $1$ and $15$, you're immediately disqualified.
+    If your output is not an integer between $1$ and $15$, you're immediately disqualified and get $-100$ points for this game.
     <b>IMPORTANT:</b> You also have to end your output with a linebreak (<code>"\n"</code>).
 </p>
 <p>
@@ -114,7 +115,7 @@
 </p>
 <h2>Example Code</h2>
 <h3>Python</h3>
-The following python code always outputs the highest possible number ($k$):
+The following python code always outputs the highest possible number ($k$) if $s$ is positive and the lowest possible number if $s$ is negative:
 <pre><code># read n, k, w and j
 n, k, w, j = map(int, input().split())
 
