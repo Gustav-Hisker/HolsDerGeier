@@ -23,7 +23,7 @@ makedirs(cppPath, exist_ok=True)
 makedirs(exePath, exist_ok=True)
 
 class ProgramHandler:
-    def __init__(self, path: str, n: int) -> None:
+    def __init__(self, path: str, n: int, j: int) -> None:
         self.path = path
         self.n = n
         self.cards = set(range(1,16))
@@ -34,7 +34,7 @@ class ProgramHandler:
             self.p = Popen(path, stdin=PIPE, stdout=PIPE, stderr=PIPE, text=True, bufsize=1)
 
         # Send initial input
-        self.p.stdin.write(f"{n}\n")
+        self.p.stdin.write(f"{n} {j}\n")
         self.p.stdin.flush()
 
     def sendSubmissions(self, g: list[int]) -> None:
@@ -77,11 +77,11 @@ def game(paths: list[str]):
     programs = []
     for i, p in enumerate(paths):
         try:
-            programs.append(ProgramHandler(p, n))
+            programs.append(ProgramHandler(p, n, i))
         except Exception as e:
             while programs:
                 del programs[0]
-            yield [-1 if i==j else 0 for j in range(n)], [], "Initialisation error: " + str(e)
+            yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
             return
 
     scores = [0 for _ in programs]
@@ -99,7 +99,7 @@ def game(paths: list[str]):
             except Exception as e:
                 while programs:
                     del programs[0]
-                yield [-1 if i==j else 0 for j in range(n)], [], "Initialisation error: " + str(e)
+                yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)], 0, "Initialisation error: " + str(e)
                 return
 
         for i, p in enumerate(programs):
@@ -108,7 +108,7 @@ def game(paths: list[str]):
             except Exception as e:
                 while programs:
                     del programs[0]
-                yield [-1 if i==j else 0 for j in range(n)], [], "Initialisation error: " + str(e)
+                yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
                 return
 
         if winnables:
@@ -118,10 +118,12 @@ def game(paths: list[str]):
                 except Exception as e:
                     while programs:
                         del programs[0]
-                    yield [-1 if i==j else 0 for j in range(n)], [], "Initialisation error: " + str(e)
+                    yield [-1 if i==j else 0 for j in range(n)], ["x" for _ in range(n)],0, "Initialisation error: " + str(e)
                     return
 
         submissionCounts = {s:0 for s in range(1,16)}
+
+        winnableSum = currentWinnable+remainer
 
         for submission in submissions:
             submissionCounts[submission] += 1
@@ -129,18 +131,21 @@ def game(paths: list[str]):
         if currentWinnable + remainer >= 0:
             for i in range(15,0,-1):
                 if submissionCounts[i] == 1:
-                    scores[submissions.index(i)] += currentWinnable + remainer
+                    scores[submissions.index(i)] += winnableSum
                     remainer = 0
                     break
+            else:
+                remainer = winnableSum
         else:
             for i in range(1,16,1):
                 if submissionCounts[i] == 1:
-                    scores[submissions.index(i)] += currentWinnable + remainer
+                    scores[submissions.index(i)] += winnableSum
                     remainer = 0
                     break
+            else:
+                remainer = winnableSum
 
-
-        yield scores, submissions, None
+        yield scores, submissions, winnableSum, None
 
     while programs:
         del programs[0]
@@ -158,9 +163,9 @@ def testProgram(path: str):
             paths = [(path if i == j else testCode) for i in range(n)]
 
 
-            scores, submissions, err = None, None, None
+            scores, err = None, None
             for gs in game(paths):
-                scores, submissions, err = gs
+                scores, _, _, err = gs
 
             if err:
                 yield False, err
@@ -364,11 +369,13 @@ def randomGame(n: int = 5):
 
     scoreList = []
     submissionList = []
+    winnableList = []
     for gs in game(programs):
-        scores, submissions, _ = gs
+        scores, submissions, winnable, _ = gs
         scoreList.append(scores)
         submissionList.append(submissions)
-    return {"n":n,"names":names,"score-list":scoreList, "submission-list":submissionList}
+        winnableList.append(winnable)
+    return {"n":n,"names":names,"score-list":scoreList, "submission-list":submissionList, "winnable-list":winnableList}
 
 
 def getAllMatchUps(programs,n):
@@ -387,7 +394,7 @@ def tournament(n: int = 5):
     for mu in getAllMatchUps(programs, n):
         scores = None
         for cs in game(mu):
-            scores, _, _ = cs
+            scores, _, _, _ = cs
 
         for i, s in enumerate(scores):
             overallScore[mu[i]] += s
