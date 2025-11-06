@@ -380,7 +380,7 @@ def getAllMatchUps(programs,n):
             yield matchUp + [program]
 
 @app.get("/tournament", response_class=JSONResponse)
-def tournament(n: int = 5, k: int = 5, w: int = 20):
+def tournament(n: int = 5):
     programs = allPrograms()
     overallScore = {p:0 for p in programs}
     assert n>=2
