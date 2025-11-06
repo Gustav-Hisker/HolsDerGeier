@@ -61,33 +61,33 @@
     (index starting at $0$).
     This is done in the following format followed by a linebreak (<code>"\n"</code>):
     <br><code>n j</code><br>
-    For example if $n=5$ (so there are $5$ players), and you're number is $j=43 the input looks like this:
+    For example if $n=5$ (so there are $5$ players), and you're number is $j=4$ the input looks like this:
     <br><code>5 3</code><br>
 </p>
 <p>
-    First of all, you are given as input the sum of the values $s$ of all the auction cards in the middle. Because cards can remain in the middle,
-    you won't necessarily just get the numbers $-5, \ldots , -1 ,1, \ldots, 10$ in some order, you could also get $12$ or $4$ twice, 
-    so watch out for this. The input simply looks like this:
+    First of all, you are given as input the sum of the values $s$ of all the auction cards in the middle. Because cards can remain in the middle
+    and their values sum up, you won't necessarily just get the numbers $-5, \ldots , -1 ,1, \ldots, 10$  in some order,
+    you could instead get $12$, or $4$ twice, so watch out for this. The input simply looks like this:
     <br> <code> s </code> <br>
-    Then, your program has to decide the first number to submit. Note that your strategy depends on the sign of $s$.
+    Then, your program has to decide on the first number to submit. Note that your strategy depends on the sign of $s$.
     If your output is not an integer between $1$ and $15$, you're immediately disqualified and get $-100$ points for this game.
     <b>IMPORTANT:</b> You also have to end your output with a linebreak (<code>"\n"</code>).
 </p>
 <p>
-    Now you get all the submissions $i_0, ..., i_j, ... i_{n-1}$ that were done by you and the other players.
-    Where $i_k$ is the number submitted by the $k$-th player, so $i_k$ is the number you submitted.
-    Your code gets them in the following format:
+    Now you get all the submissions $i_0, ..., i_j, ... i_{n-1}$ from all the players including yourself.
+    Here $i_k$ is the number submitted by the $k$-th player, so $i_k$ is the number you submitted.
+    You get them in the following format:
     <br><code>i_0 i_1 ... i_j ... i_(n-1)</code>
 </p>
 <p>
-    As an example: There are 4 players. In the first round, the auction card has value $s=6$, the first player (index $0$) submits $14$, 
-    ,the second player (index $1$) submits $12$, the next one submits $14$ and the last one submits $8$.
+    For example: There are 4 players. In the first round, the auction card has value $s=6$, the first player (index $0$) submits $14$, 
+    the second player (index $1$) submits $12$, the next one submits $14$ and the last one submits $8$.
     <br><code>14 12 14 8</code><br>
-    (In this case the second player gets the auction card since $s>0$ and he submitted the highest unique number.)
+    (In this case the second player gets the auction card since he submitted the highest unique number and $s>0$.)
 </p>
 <p>
     Then, you again receive the sum of the values of the auction cards in the middle as input, and your program has to submit a new number,
-    but it may not submit one it previously submitted.
+    but it may not submit one it previously submitted (since these cards are gone).
 </p>
 <p>
     As an example for a whole game. Here the "conversation" between <span style="color:magenta">your program</span> and <span style="color:green">the game</span>:
