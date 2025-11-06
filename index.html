@@ -115,17 +115,27 @@
 </p>
 <h2>Example Code</h2>
 <h3>Python</h3>
-The following python code always outputs the highest possible number ($k$) if $s$ is positive and the lowest possible number if $s$ is negative:
-<pre><code># read n, k, w and j
-n, k, w, j = map(int, input().split())
-
+The following python code always chooses the highest possible card ($k$) if $s$ is positive and the lowest possible card $s$ otherwise:
+<pre><code># read n and j
+n, j = map(int, input().split())
+#your cards
+cards=list(range(1,16))
 # repeating for the whole game
 while True:
-    # outputting the highest allowed number
-    print(k)
+    value=map(int,input())
+    if value>0:
+        #choose the highest card, so the last one since the list is ordered
+        print(cards[-1])
+        cards.pop(-1)
+    else:
+        #choose the lowest card
+        print(cards[0])
+        cards.pop(0)
+
     # reading the input but ignoring it
-    submitted_numbers = list(map(int, input().split()))</code></pre>
-The following python code outputs random numbers in the range of $1$ to $k$:
+    submitted_numbers = list(map(int, input().split())) </code></pre>
+    
+The following python code outputs random cards:
 <pre><code># import random to get randomness
 from random import randint
 
