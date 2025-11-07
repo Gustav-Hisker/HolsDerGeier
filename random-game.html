@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Unique Integer Choice Game</title>
+    <title>Unique Auction Card Game</title>
     <style>
         /**
          * matcha.css — 3.0.0
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
 </head>
 <body>
-<h1>Unique Integer Choice Game</h1>
+<h1>Unique Auction Card Game</h1>
 <h2>Random Game Display</h2>
 <canvas id="cv" width="1000" height="500" style="width: 100%"><img id="bg" src="/background.jpeg"  alt="Ein wunderschöner Holztisch"></canvas>
 <br><a href='/'><button>Return to start page</button></a>
@@ -73,7 +73,6 @@ while (true) {
     let score_list = game["score-list"];
     let n = game["n"];
 
-    ctx.font = "bold 50px ui-rounded";
     ctx.textAlign = "center";
 
     for (let i = 0; i < sub_list.length; i++) {
@@ -81,7 +80,7 @@ while (true) {
 
         for (let j = 0; j < n; j++) {
             ctx.fillStyle = "hsl("+(360*j/n)+" 90 50)";
-            ctx.font = "bold 50px ui-rounded";
+            ctx.font = "bold " + Math.min(50,250/names[j].length) + "px ui-rounded";
             ctx.fillText(names[j], 1000*j/n + 500/n, 450);
             ctx.font = "bold 40px ui-rounded";
             ctx.fillText((i >= 1 ? score_list[i - 1][j] : 0), 1000*j/n + 500/n, 495);
