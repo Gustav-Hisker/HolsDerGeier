@@ -4,7 +4,7 @@ n, j = map(int, input().split())
 cards=list(range(1,16))
 # repeating for the whole game
 while True:
-    value=map(int,input())
+    value = int(input())
     if value>0:
         #choose the highest card, so the last one since the list is ordered
         print(cards[-1])
