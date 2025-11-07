@@ -135,7 +135,7 @@ while True:
     # reading the input but ignoring it
     submitted_numbers = list(map(int, input().split())) </code></pre>
     
-The following python code outputs random cards:
+The following python code outputs the cards in random order:
 <pre><code># import random to get randomness
 from random import shuffle
 
@@ -159,54 +159,73 @@ for card in cards:
     # reading the cards the other players played (and ignoring it)
     playedCards = list(map(int, input().split()))</code></pre>
 <h3>C++</h3>
-The following C++ code always outputs the highest possible number ($k$):
+The following C++ code always chooses the highest possible card ($k$) if $s$ is positive and the lowest possible card $s$ otherwise
 <pre><code>#include&le;iostream>
-#include &le;vector>
+#include&le;vector>
 
 int main(){
-    // read n, k, w and j
-    int n, k, w, j;
-    std::cin >> n >> k >> w >> j;
-
+    //read n and j
+    int n, j;
+    std::cin >> n >> j;
+    // your cards
+    std::vector&le;int> cards = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
     // repeating for the whole game
     while (true){
-        // outputting the highest number
-        std::cout << k << std::endl;
+        int value;
+        std::cin >> value;
+
+        if (value>0){
+            // choose the highest card, so the last one since the list is ordered
+            std::cout << cards.back() << std::endl;
+            cards.pop_back();
+        }
+        else {
+            // choose the lowest card
+            std::cout << cards.front() << std::endl;
+            cards.erase(cards.begin());
+        }
+
+
         // reading the input but ignoring it
         std::vector&le;int> submitted_numbers(n);
         for (int i = 0; i < n; i++) {
-            std::cin >> submitted_numbers[i];
+          std::cin >> submitted_numbers[i];
         }
     }
 }</code></pre>
-The following C++ code outputs random numbers in the range of $1$ to $k$:
+The following C++ code outputs the cards in random order:
 <pre><code>#include&le;iostream>
-#include &le;random> // for the randomness
-#include &le;vector>
+#include&le;algorithm>
+#include&le;vector>
 
 int main(){
-    // read n, k, w and j
-    int n, k, w, j;
-    std::cin >> n >> k >> w >> j;
+    // read n and j
+    int n, j;
+    std::cin >> n >> j;
 
-    // creating a random device
-    std::random_device rand_dev;
-    // creating a random generator
-    std::mt19937 gen(rand_dev());
-    // creating distribution
-    std::uniform_int_distribution&le;int> distr(1, k);
+    // Make a vector of all cards 1,2,3,4,....,13,14,15
+    std::vector&le;int> cards = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    // repeating for the whole game
-    while (true){
-        // outputting random integer
-        std::cout << distr(gen) << std::endl;
-        // reading the input but ignoring it
-        std::vector&le;int> submitted_numbers(n);
-        for (int i = 0; i < n; i++) {
-            std::cin >> submitted_numbers[i];
+    // shuffling the cards
+    std::random_shuffle(cards.begin(), cards.end());
+
+    // laying out these cards in this order
+    for (int card : cards){
+        // reading winnable card in the middle (and ignoring it)
+        int w;
+        std::cin >> w;
+
+        // play this card
+        std::cout << card << std::endl;
+
+        // reading the cards the other players played (and ignoring it)
+        std::vector&le;int> playedCards(n);
+        for (int i = 0; i < n; i++){
+            std::cin >> playedCards[i];
         }
     }
-}</code></pre>
+}
+</code></pre>
 
 <h2>
     How to submit a program
