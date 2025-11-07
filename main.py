@@ -359,12 +359,24 @@ def loadgif():
 
     return StreamingResponse(iterfile(), media_type="jpeg")
 
+def getAllMatchUps(programs):
+    for n in range(3,6):
+        yield from getAllMatchUpsWithFixedSize(programs, n)
+
+def getAllMatchUpsWithFixedSize(programs,n):
+    if n > len(programs):
+        return
+    if n == 0:
+        yield []
+        return
+    for program in programs:
+        for matchUp in getAllMatchUpsWithFixedSize(set(programs)-{program}, n-1):
+            yield matchUp + [program]
+
 
 @app.get("/randomGame", response_class=JSONResponse)
-def randomGame(n: int = 5):
-    programs = []
-    for i in range(n):
-        programs.append(random.choice(allPrograms()))
+def randomGame():
+    programs = random.choice(list(getAllMatchUps(allPrograms())))
 
     names = [os.path.basename(f).removesuffix(".py") for f in programs]
 
@@ -376,23 +388,15 @@ def randomGame(n: int = 5):
         scoreList.append(scores)
         submissionList.append(submissions)
         winnableList.append(winnable)
-    return {"n":n,"names":names,"score-list":scoreList, "submission-list":submissionList, "winnable-list":winnableList}
+    return {"n":len(programs),"names":names,"score-list":scoreList, "submission-list":submissionList, "winnable-list":winnableList}
 
-
-def getAllMatchUps(programs,n):
-    if n == 0:
-        yield []
-        return
-    for program in programs:
-        for matchUp in getAllMatchUps(programs, n-1):
-            yield matchUp + [program]
 
 @app.get("/tournament", response_class=JSONResponse)
 def tournament(n: int = 5):
     programs = allPrograms()
     overallScore = {p:0 for p in programs}
     assert n>=2
-    for mu in getAllMatchUps(programs, n):
+    for mu in getAllMatchUps(programs):
         scores = None
         for cs in game(mu):
             scores, _, _, _ = cs
