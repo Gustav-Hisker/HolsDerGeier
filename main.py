@@ -1,8 +1,11 @@
 import os
 import random
+import string
 import subprocess
 import sys
+import threading
 from os import makedirs
+from random import shuffle
 from subprocess import Popen, PIPE
 from typing import Annotated
 
@@ -21,6 +24,9 @@ testCode = "./examples/randomPlayer.py"
 makedirs(pyPath, exist_ok=True)
 makedirs(cppPath, exist_ok=True)
 makedirs(exePath, exist_ok=True)
+
+tournamentPassword = "".join([random.choice(string.ascii_letters + string.digits) for _ in range(8)])
+print(f"The password to run the tournament is: {tournamentPassword}")
 
 class ProgramHandler:
     def __init__(self, path: str, n: int, j: int) -> None:
@@ -391,21 +397,53 @@ def randomGame():
     return {"n":len(programs),"names":names,"score-list":scoreList, "submission-list":submissionList, "winnable-list":winnableList}
 
 
-@app.get("/tournament", response_class=JSONResponse)
-def tournament(n: int = 5):
+scores = {}
+muCount = 0
+playedGames = 0
+
+class TournamentThread(threading.Thread):
+    def __init__(self, mu):
+        threading.Thread.__init__(self)
+        self.mu = mu
+
+    def run(self):
+        global scores, playedGames
+        gameScores = None
+        for cs in game(self.mu):
+            gameScores, _, _, _ = cs
+
+        for i, s in enumerate(gameScores):
+            scores[self.mu[i]] += s
+
+        playedGames += 1
+
+
+@app.post("/start-tournament", response_class=JSONResponse)
+def startTournament(pw : str):
+    if pw != tournamentPassword: return{"ok":False, "error":"Invalid password"}
+    global scores, playedGames, muCount
     programs = allPrograms()
-    overallScore = {p:0 for p in programs}
-    assert n>=2
-    for mu in getAllMatchUps(programs):
-        scores = None
-        for cs in game(mu):
-            scores, _, _, _ = cs
+    scores = {p:0 for p in programs}
+    if len(programs) <= 1: return {"ok":False, "error":"Too few players"};
+    mus = list(getAllMatchUps(programs))
+    shuffle(mus)
+    muCount = len(mus)
+    starterThread = threading.Thread()
+    starterThread.run = lambda : [TournamentThread(mu).start() for mu in mus]
+    starterThread.start()
+    return {"ok":True}
 
-        for i, s in enumerate(scores):
-            overallScore[mu[i]] += s
 
-    return overallScore
+@app.get("/tournament", response_class=JSONResponse)
+def tournament():
+    return {os.path.basename(f).removesuffix(".py"):s for f, s in scores.items()}
+
+
+@app.get("/tournamentDisplay", response_class=HTMLResponse)
+def tournamentDisplay():
+    with open("tournament.html") as f:
+        return f.read()
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=9000)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000)
