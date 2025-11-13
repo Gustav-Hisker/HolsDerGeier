@@ -113,6 +113,28 @@
 
     <br><code>...</code>
 </p>
+<h2>Tournament</h2>
+<p>
+    The core idea of this Event is that these programs compete with each other in a tournament. In this tournament each possible match up is simulated.
+    Possible match up is a match up of a round from 3 to 5 different programs.
+    Including different permutations of the same programs against each other.
+    As an example if $a$, $b$, $c$ and $d$ are the programs in the tournament the possible match ups are:
+    $\{(a,b,c),$ $(b,c,a),$ $(c,a,b),$ $(b,a,c),$ $(a,c,b),$ $(c,b,a),$ $
+    (d,b,c),$ $(b,c,d),$ $(c,d,b),$ $(b,d,c),$ $(d,c,b),$ $(c,b,d),$ $
+    (a,d,c),$ $(d,c,a),$ $(c,a,d),$ $(d,a,c),$ $(a,c,d),$ $(c,d,a),$ $
+    (a,b,d),$ $(b,d,a),$ $(d,a,b),$ $(b,a,d),$ $(a,d,b),$ $(d,b,a),$ $
+    (d,a,b,c),$ $(d,b,c,a),$ $(d,c,a,b),$ $(d,b,a,c),$ $(d,a,c,b),$ $(d,c,b,a),$ $
+    (a,d,b,c),$ $(b,d,c,a),$ $(c,d,a,b),$ $(b,d,a,c),$ $(a,d,c,b),$ $(c,d,b,a),$ $
+    (a,b,d,c),$ $(b,c,d,a),$ $(c,a,d,b),$ $(b,a,d,c),$ $(a,c,d,b),$ $(c,b,d,a),$ $
+    (a,b,c,d),$ $(b,c,a,d),$ $(c,a,b,d),$ $(b,a,c,d),$ $(a,c,b,d),$ $(c,b,a,d)\}$
+</p>
+<p>
+    The final points given in the tournament are calculated by summing up all the points of the played game rounds.
+</p>
+<p>
+    <a href="/randomGameDisplay">Here</a> you can watch random games the submitted programs are playing.<br>
+    <a href="/tournamentDisplay">Here</a> you can see the current leaderboard.
+</p>
 <h2>Example Code</h2>
 <h3>Python</h3>
 The following python code always chooses the highest possible card ($k$) if $s$ is positive and the lowest possible card $s$ otherwise:
@@ -226,7 +248,6 @@ int main(){
     }
 }
 </code></pre>
-
 <h2>
     How to submit a program
 </h2>
@@ -269,8 +290,6 @@ int main(){
     />
     <input type="submit" value="Submit">
 </div></form>
-<h2>Live Arena</h2>
-<a href="/randomGameDisplay">Here</a> you can watch random games illustrated on a beautiful ui.
 </body>
 
 

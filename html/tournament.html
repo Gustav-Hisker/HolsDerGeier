@@ -27,6 +27,7 @@
 <h1>Unique Auction Card Game</h1>
 <h2>Tournament Display</h2>
 <div id="display" style="display: block; position: relative; box-sizing: border-box"></div>
+<br><a href='/'><button>Return to start page</button></a>
 </body>
 <div hidden="hidden"><div id = "template" style="position: absolute; box-sizing: border-box; width: 100%;  border-radius: 20px; background-color: #3e3e42;display: grid; grid-template-columns: 10% 75% 15%; padding-left: 1em; padding-right: 1em;">
     <b id="template.pos" style="align-content: center; font-size: 2em">1.</b>
@@ -118,6 +119,9 @@
         let oldNames = Object.keys(prevScores);
         newNames.sort()
         oldNames.sort()
+
+        display.style.height = (newNames.length*4)+"em"
+
         if (newNames.length != oldNames.length) {
             relabel();
         } else {
