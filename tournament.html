@@ -40,10 +40,10 @@
     const tpos = document.getElementById("template.pos");
     const tname = document.getElementById("template.name");
     const tscore = document.getElementById("template.score");
-    const k = 0.00005;
-    const d = 0.005;
+    const k = 0.025;
     let scores = {}
     let prevScores
+    let stop = false;
 
     async function getScores() {
         try {
@@ -65,7 +65,15 @@
         for (let o of Object.keys(scores)){
             if (scores[n]<scores[o] || (scores[n]==scores[o] && n<o)) res++;
         }
-        return (res*4)+"em";
+        return (res*4);
+    }
+
+    function getOldPos(n){
+        let res = 0;
+        for (let o of Object.keys(prevScores)){
+            if (prevScores[n]<prevScores[o] || (prevScores[n]==prevScores[o] && n<o)) res++;
+        }
+        return (res*4);
     }
 
     function getPlace(n){
@@ -81,23 +89,23 @@
 
         for (let n in scores){
             const node = template.cloneNode();
-            node.id = n;
+            node.id = "display."+n;
 
             const pos = tpos.cloneNode();
-            pos.id = n + ".pos";
+            pos.id = node.id + ".pos";
             pos.innerText = getPlace(n);
             const name = tname.cloneNode();
-            name.id = n + ".name";
+            name.id = node.id + ".name";
             name.innerText = n;
             const score = tscore.cloneNode();
-            score.id = n + ".score";
+            score.id = node.id + ".score";
             score.innerText = scores[n];
 
             node.appendChild(pos);
             node.appendChild(name);
             node.appendChild(score);
 
-            node.style.marginTop = getPos(n);
+            node.style.marginTop = getPos(n) + "em";
 
             display.appendChild(node);
         }
@@ -120,16 +128,31 @@
                 }
             }
         }
-        relabel();
+
+        for (let n in scores){
+            const pos = document.getElementById("display." + n + ".pos");
+            pos.innerText = getPlace(n);
+
+            const score = document.getElementById("display." + n + ".score");
+            score.innerText = scores[n];
+        }
+
         setTimeout(mainloop, 1000);
     }
 
     async function animation(){
-
+        for (let n of Object.keys(scores)){
+            let node = document.getElementById("display."+n)
+            let y = Number(node.style.marginTop.replace("em", ""))
+            y += k*(Math.abs(y - getOldPos(n))+k)*(getPos(n) - y)
+            node.style.marginTop = y +"em";
+            console.log(n + " : " + getPos(n) + " -> " + y)
+        }
+        if (stop) return;
         setTimeout(animation, 10);
     }
 
     mainloop();
-
+    animation();
 </script>
 </html>
