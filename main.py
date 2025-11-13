@@ -195,7 +195,7 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 def root():
-    with open("index.html") as f:
+    with open("html/index.html") as f:
         return f.read()
 
 # PYTHON
@@ -204,7 +204,7 @@ def wrapperUploadPy(team: Annotated[str, Form()], file: UploadFile = File(...)):
     return StreamingResponse(uploadPy(team, file), media_type="html")
 
 def uploadPy(team: Annotated[str, Form()], file: UploadFile = File(...)):
-    with open("preset.html") as f:
+    with open("html/preset.html") as f:
         yield f.read()
 
     if team is None or team == "" or team.endswith(".temp") or team.endswith(".py"): yield "<h1>Fuck Off</h1> This team name is not valid."; return
@@ -245,7 +245,7 @@ def wrapperUploadCpp(team: Annotated[str, Form()], file: UploadFile = File(...))
     return StreamingResponse(uploadCpp(team, file), media_type="html")
 
 def uploadCpp(team: Annotated[str, Form()], file: UploadFile = File(...)):
-    with open("preset.html") as f:
+    with open("html/preset.html") as f:
         yield f.read()
 
     if team is None or team == "" or team.endswith(".temp") or team.endswith(".py"): yield "<h1>Fuck Off</h1> This team name is not valid."; return
@@ -297,7 +297,7 @@ def wrapperUploadExe(team: Annotated[str, Form()], file: UploadFile = File(...))
     return StreamingResponse(uploadExe(team, file), media_type="html")
 
 def uploadExe(team: Annotated[str, Form()], file: UploadFile = File(...)):
-    with open("preset.html") as f:
+    with open("html/preset.html") as f:
         yield f.read()
 
     if team is None or team == "" or team.endswith(".temp") or team.endswith(".py"): yield "<h1>Fuck Off</h1> This team name is not valid."; return
@@ -353,14 +353,14 @@ def testUpload(path):
 
 @app.get("/randomGameDisplay", response_class=HTMLResponse)
 def randomGameDisplay():
-    with open("random-game.html") as f:
+    with open("html/random-game.html") as f:
         return f.read()
 
 
 @app.get("/background.jpeg")
-def loadgif():
+def background():
     def iterfile():
-        with open("./background.jpeg", mode="rb") as file_like:
+        with open("assets/background.jpeg", mode="rb") as file_like:
             yield from file_like
 
     return StreamingResponse(iterfile(), media_type="jpeg")
@@ -441,9 +441,16 @@ def tournament():
 
 @app.get("/tournamentDisplay", response_class=HTMLResponse)
 def tournamentDisplay():
-    with open("tournament.html") as f:
+    with open("html/tournament.html") as f:
         return f.read()
 
+@app.get("/favicon.ico")
+def favicon():
+    def iterfile():
+        with open("assets/favicon.ico", mode="rb") as file_like:
+            yield from file_like
+
+    return StreamingResponse(iterfile(), media_type="ico")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000)
