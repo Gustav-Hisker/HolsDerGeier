@@ -26,13 +26,13 @@
 <body>
 <h1>Unique Auction Card Game</h1>
 <h2>Tournament Display</h2>
-<div id="display"></div>
+<div id="display" style="display: block; position: relative; box-sizing: border-box"></div>
 </body>
-<div id = "template" style="width: 90vw; position: absolute; border-radius: 20px; background-color: #3e3e42;display: grid; grid-template-columns: 10% 75% 15%; padding-left: 1em; padding-right: 1em;">
-    <span id="template.pos" style="align-content: center; font-size: 2em"><b>1.</b></span>
+<div hidden="hidden"><div id = "template" style="position: absolute; box-sizing: border-box; width: 100%;  border-radius: 20px; background-color: #3e3e42;display: grid; grid-template-columns: 10% 75% 15%; padding-left: 1em; padding-right: 1em;">
+    <b id="template.pos" style="align-content: center; font-size: 2em">1.</b>
     <span id="template.name" style="align-content: center">Test</span>
     <span id="template.score" style="align-content: center">1235</span>
-</div>
+</div></div>
 <script>
     const url = "/tournament";
     const display = document.getElementById("display");
@@ -40,7 +40,10 @@
     const tpos = document.getElementById("template.pos");
     const tname = document.getElementById("template.name");
     const tscore = document.getElementById("template.score");
+    const k = 0.00005;
+    const d = 0.005;
     let scores = {}
+    let prevScores
 
     async function getScores() {
         try {
@@ -57,6 +60,22 @@
         }
     }
 
+    function getPos(n){
+        let res = 0;
+        for (let o of Object.keys(scores)){
+            if (scores[n]<scores[o] || (scores[n]==scores[o] && n<o)) res++;
+        }
+        return (res*4)+"em";
+    }
+
+    function getPlace(n){
+        let res = 1;
+        for (let s of Object.values(scores)){
+            if (scores[n]<s) res++;
+        }
+        return res;
+    }
+
     function relabel(){
         display.innerHTML = "";
 
@@ -66,6 +85,7 @@
 
             const pos = tpos.cloneNode();
             pos.id = n + ".pos";
+            pos.innerText = getPlace(n);
             const name = tname.cloneNode();
             name.id = n + ".name";
             name.innerText = n;
@@ -77,30 +97,36 @@
             node.appendChild(name);
             node.appendChild(score);
 
+            node.style.marginTop = getPos(n);
+
             display.appendChild(node);
         }
     }
 
-    function mainloop(){
-        let newScores = getScores()
-        let newNames = newScores.keys()
-        let oldNames = scores.keys()
+    async function mainloop() {
+        prevScores = scores;
+        scores = await getScores();
+        let newNames = Object.keys(scores);
+        let oldNames = Object.keys(prevScores);
         newNames.sort()
         oldNames.sort()
         if (newNames.length != oldNames.length) {
-            scores = newScores;
             relabel();
         } else {
             for (let i in oldNames) {
-                if (oldNames[i] != newNames[i]){
-                    scores = newScores;
+                if (oldNames[i] != newNames[i]) {
                     relabel();
                     break;
                 }
             }
         }
-        scores = newScores;
-        setTimeout(mainloop,1000);
+        relabel();
+        setTimeout(mainloop, 1000);
+    }
+
+    async function animation(){
+
+        setTimeout(animation, 10);
     }
 
     mainloop();

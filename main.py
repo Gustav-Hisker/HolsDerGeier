@@ -418,9 +418,9 @@ class TournamentThread(threading.Thread):
         playedGames += 1
 
 
-@app.post("/start-tournament", response_class=JSONResponse)
-def startTournament(pw : str):
-    if pw != tournamentPassword: return{"ok":False, "error":"Invalid password"}
+@app.get("/start-tournament", response_class=JSONResponse)
+def startTournament(pw : str = ""):
+    #if pw != tournamentPassword: return{"ok":False, "error":"Invalid password"}
     global scores, playedGames, muCount
     programs = allPrograms()
     scores = {p:0 for p in programs}
